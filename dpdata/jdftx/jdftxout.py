@@ -7,7 +7,7 @@ import glob
 
 
 
-def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, type_idx_zero = True, FmaxFilter=False, FmaxLim=10):
+def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, type_idx_zero = True, FmaxFilter=False, FmaxLim=20):
     # FmaxFilter True if you want to exclude configs from converstion if greater than FmaxLim (eV)
 
     #create file with last major update noted
