@@ -38,6 +38,7 @@ for curDir in dirs:
     os.chdir(curDir)
     # convFp = open('conversionInfo',"w")
     fs=sorted(glob('./*.jdftxout'))  # remember to change here !!!
+    # print(fs)
     ms=MultiSystems()
     ls=[]
     for f in fs:
