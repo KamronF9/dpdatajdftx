@@ -6,7 +6,6 @@ import gzip
 import glob
 
 
-
 def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, type_idx_zero = True, FmaxFilter=False, FmaxLim=20):
     # FmaxFilter True if you want to exclude configs from converstion if greater than FmaxLim (eV/A)
 
@@ -192,6 +191,7 @@ def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, 
             # print(forcesMag)
             # sys.exit(1)
             # to filter or save rejects:
+
             if FmaxFilter and forcesMagMax>FmaxLim:
             # if FmaxFilter and forcesMagMax<FmaxLim:
                 # reject config from all configs

@@ -177,6 +177,8 @@ class System (MSONable) :
                   step = 1,
                   data = None,
                   convergence_check = True,
+                  FmaxFilter = False,
+                  FmaxLim = 20,
                   **kwargs) :
         """
         Constructor

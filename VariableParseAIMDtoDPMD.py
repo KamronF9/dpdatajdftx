@@ -18,8 +18,8 @@ process multi systems
 """
 
 
-if len(sys.argv) < 3:
-    print("Usage: python VariableParseAIMDtoDPMD.py <int for step stride to take> <checkConvergence optional> <FmaxFilter bool> >conversionInfo")
+if len(sys.argv) < 2:
+    print("Usage: python VariableParseAIMDtoDPMD.py <int for step stride to take> <checkConvergence optional> <FmaxFilter bool> > conversionInfo")
     exit(1)
     
 # add rejection of initial data
