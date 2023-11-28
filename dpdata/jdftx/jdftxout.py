@@ -188,7 +188,7 @@ def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, 
             # print(forces)
             forcesMag = np.linalg.norm(forces,axis=1)
             forcesMagMax = np.max(forcesMag)
-            # print(forcesMag)
+            # print(FmaxFilter, forcesMagMax, FmaxLim)
             # sys.exit(1)
             # to filter or save rejects:
 

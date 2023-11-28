@@ -265,7 +265,7 @@ class System (MSONable) :
             return
         if file_name is None :
             return
-        self.from_fmt(file_name, fmt, type_map=type_map, begin= begin, step=step, convergence_check=convergence_check, **kwargs)
+        self.from_fmt(file_name, fmt, type_map=type_map, begin= begin, step=step, convergence_check=convergence_check, FmaxFilter = FmaxFilter, FmaxLim = FmaxLim, **kwargs)
 
         if type_map is not None:
             self.apply_type_map(type_map)

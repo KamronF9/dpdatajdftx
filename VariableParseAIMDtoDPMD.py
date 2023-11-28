@@ -60,7 +60,7 @@ for curDir in dirs:
             
         if len(ls)>0:
             ms.append(ls)
-    ls.to('vasp/poscar', 'POSCAR', frame_idx=0)
+    # ls.to('vasp/poscar', 'POSCAR', frame_idx=0)
     
     
     ms.to_deepmd_raw('data')
