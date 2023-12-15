@@ -145,7 +145,9 @@ def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, 
                 if coordsType == "Cartesian":
                     forces *= 1./(eV/Angstrom)
                 else:
+                    # forces = np.dot(forces, 1/eV) #convert to Cartesian (eV/Angstrom) multiplicative inv
                     forces = np.dot(forces, np.linalg.inv(R)/eV) #convert to Cartesian (eV/Angstrom) multiplicative inv
+                    print(np.dot([1,2,3],np.linalg.inv(R)))
 
         # if stepActive and line.startswith('# Forces in '):
         # need to read this in even if step not active to gather external force even before step is decided or not
