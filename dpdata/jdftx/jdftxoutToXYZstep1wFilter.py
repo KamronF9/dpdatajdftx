@@ -8,8 +8,8 @@ from jdftxout import get_frames
 import os
 
 # python /home/kamron/dpdatajdftx/dpdata/jdftx/jdftxoutToXYZ.py test.xyz
-# python ~/dpdatajdftx/dpdata/jdftx/jdftxoutToXYZ.py 500deg300rot.xyz > conversionInfo
-# python ~/dpdatajdftx/dpdata/jdftx/jdftxoutToXYZ.py 2so3wWaterDelta.xyz | tee conversionXYZ
+# python ~/dpdatajdftx/dpdata/jdftx/jdftxoutToXYZstep1.py 500deg300rot.xyz > conversionInfo
+# python /gpfs/u/home/TMGN/TMGNkmfr/scratch-shared/dpdatajdftx/dpdata/jdftx/jdftxoutToXYZstep1.py 2so3mini.xyz > conversionInfo
 
 
 def main(xyzOut):
@@ -18,10 +18,9 @@ def main(xyzOut):
         for pathAndFilename in sorted(glob.iglob(os.path.join(os.getcwd(), pattern))):
             fname = os.path.basename(pathAndFilename)
             print('working on: ', fname)
-            # sys.exit(1)
-            # unique_atom_names, ions_per_type, atom_types, all_cells, all_coords, all_energies, all_forces = get_frames(fname, step = 10)
-            unique_atom_names, ions_per_type, atom_types, all_cells, all_coords, all_energies, all_forces = get_frames(fname, step = 1, convergence_check=False) # delta
-            
+            unique_atom_names, ions_per_type, atom_types, all_cells, all_coords, all_energies, all_forces = get_frames(fname, step = 1, convergence_check=False, FmaxFilter=True, FmaxLim=20)
+
+
             # print('Update: working on step ')
             # BUILD xyz output
             AtNumTotal = np.sum(ions_per_type)

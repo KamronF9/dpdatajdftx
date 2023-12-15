@@ -19,7 +19,7 @@ process multi systems
 
 
 if len(sys.argv) < 2:
-    print("Usage: python VariableParseAIMDtoDPMD.py <int for step stride to take> <checkConvergence optional> conversionInfo")
+    print("Usage: python VariableParseAIMDtoDPMD.py <int for step stride to take> <checkConvergence optional> <FmaxFilter bool> > conversionInfo")
     exit(1)
     
 # add rejection of initial data
@@ -28,6 +28,11 @@ step = int(sys.argv[1])
 convergence_check = sys.argv[2] if (len(sys.argv) > 2) else True  # default to True
 if convergence_check == 'False':
     convergence_check = False
+
+# if you want to filter on high F magnitude values and reject snapshot if too high
+FmaxFilter = sys.argv[3] if (len(sys.argv) > 3) else False # default False
+if FmaxFilter == 'True':
+    FmaxFilter = True
 
 print(f' {step=}')
 
@@ -38,6 +43,7 @@ for curDir in dirs:
     os.chdir(curDir)
     # convFp = open('conversionInfo',"w")
     fs=sorted(glob('./*.jdftxout'))  # remember to change here !!!
+    # print(fs)
     ms=MultiSystems()
     ls=[]
     for f in fs:
@@ -45,7 +51,7 @@ for curDir in dirs:
         print(f)
         try:
             # ls=LabeledSystem(f, format='jdftxout',step=1)
-            ls=LabeledSystem(f, format='jdftxout',step=step, convergence_check=convergence_check)
+            ls=LabeledSystem(f, format='jdftxout',step=step, convergence_check=convergence_check, FmaxFilter=FmaxFilter, FmaxLim=20)
             #ls=LabeledSystem(f)
             print(ls)
         except:
@@ -54,7 +60,7 @@ for curDir in dirs:
             
         if len(ls)>0:
             ms.append(ls)
-    ls.to('vasp/poscar', 'POSCAR', frame_idx=0)
+    # ls.to('vasp/poscar', 'POSCAR', frame_idx=0)
     
     
     ms.to_deepmd_raw('data')

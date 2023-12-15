@@ -6,13 +6,15 @@ import gzip
 import glob
 
 
-def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, type_idx_zero = True):
+def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, type_idx_zero = True, FmaxFilter=False, FmaxLim=20):
+    # FmaxFilter True if you want to exclude configs from converstion if greater than FmaxLim (eV/A)
 
     #create file with last major update noted
     with open('VersionLatestFix',"w") as f:
         print(f'alphabetized elements to ensure order',file=f)
         print(f'updated version with fix to append to list now using np.copy!',file=f)
         print(f'added convergence check',file=f)
+        print(f'added max force filter',file=f)
     
         #Units:    
     eV = 1./27.2114  # divide by eV to go from jdftx H to eV
@@ -145,9 +147,9 @@ def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, 
                 if coordsType == "Cartesian":
                     forces *= 1./(eV/Angstrom)
                 else:
-                    # forces = np.dot(forces, 1/eV) #convert to Cartesian (eV/Angstrom) multiplicative inv
-                    forces = np.dot(forces, np.linalg.inv(R)/eV) #convert to Cartesian (eV/Angstrom) multiplicative inv
-                    print(np.dot([1,2,3],np.linalg.inv(R)))
+                    forces = np.dot(forces, np.linalg.inv(R)/eV) #convert to Cartesian (eV/Angstrom)
+        
+
 
         # if stepActive and line.startswith('# Forces in '):
         # need to read this in even if step not active to gather external force even before step is decided or not
@@ -163,6 +165,7 @@ def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, 
         
         #Energy components:
         if stepActive and line.startswith('     Etot ='):
+
             #was# Energy components:
 
             #Not actually reading energy components at the moment (just calc/reporting PE)
@@ -180,13 +183,27 @@ def get_frames(fname, begin = 0, step = 10, ml = False, convergence_check=True, 
             else:
             # if True:
                 energy = PE_tot
-            # accumulate items after each step
-            all_coords.append(np.copy(atpos))
-            all_cells.append(np.copy(R.T))  # need to transpose jdftx convention to map to outcar style
-            all_energies.append(np.copy(energy))
-            all_forces.append(np.copy(forces))
-            # len(all_forces) 
-            # if iStep==3: break  # HACK for testing
+            # check for max force and don't add to combination
+            
+            # print(forces)
+            forcesMag = np.linalg.norm(forces,axis=1)
+            forcesMagMax = np.max(forcesMag)
+            # print(FmaxFilter, forcesMagMax, FmaxLim)
+            # sys.exit(1)
+            # to filter or save rejects:
+
+            if FmaxFilter and forcesMagMax>FmaxLim:
+            # if FmaxFilter and forcesMagMax<FmaxLim:
+                # reject config from all configs
+                print(f'{fname} forcesMagMax>FmaxLim. forcesMagMax={forcesMagMax}')
+            else:
+                # accumulate items after each step
+                all_coords.append(np.copy(atpos))
+                all_cells.append(np.copy(R.T))  # need to transpose jdftx convention to map to outcar style
+                all_energies.append(np.copy(energy))
+                all_forces.append(np.copy(forces))
+                # len(all_forces) 
+                # if iStep==3: break  # HACK for testing
     fp.close()
 
     unique_atom_names = np.unique(atom_names) # storted!! H O 
